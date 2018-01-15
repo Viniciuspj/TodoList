@@ -10,11 +10,17 @@ import UIKit
 
 class TodoListVC: UITableViewController {
 
-    let itemArray = ["Estudar", "Jogar", "Dindin"]
+    var itemArray = ["Estudar", "Jogar", "Dindin"]
+    
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        if let items = defaults.array(forKey: "ItemsTodo") as? [String]{
+            itemArray = items
+        }
     }
     
     //MARK - Table view datasource
@@ -45,16 +51,18 @@ class TodoListVC: UITableViewController {
     //MARK: Add New items
     @IBAction func addItem(_ sender: UIBarButtonItem) {
         
-        var textField = UITextView()
+        var textField = UITextField()
         
         let alert = UIAlertController(title: "Add new item", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
-            print(textField.text)
+            //print(textField.text)
             
             if let item = textField.text{
                 self.itemArray.append(item)
                 self.tableView.reloadData()
+                
+                self.defaults.set(self.itemArray, forKey: "ItemsTodo")
             }
         }
         
