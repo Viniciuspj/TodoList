@@ -16,19 +16,8 @@ class TodoListVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        let newItem = Item()
-        newItem.title = "Item 1"
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title = "Item 2"
-        itemArray.append(newItem2)
-        
-//      if let items = defaults.array(forKey: "ItemsTodo") as? [Item]{
-//          itemArray = items
-//      }
+
+        loadItems()
     }
     
     //MARK - Table view datasource
@@ -87,6 +76,8 @@ class TodoListVC: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    //MARK: Model Manipulation Methods
+    
     func saveItems(){
         let encoder = PropertyListEncoder()
         do{
@@ -97,6 +88,19 @@ class TodoListVC: UITableViewController {
         }
         
         self.tableView.reloadData()
+    }
+    
+    func loadItems(){
+    
+        if let data = try? Data(contentsOf: fileItem!){
+            let decoder = PropertyListDecoder()
+            do{
+                itemArray = try decoder.decode([Item].self, from: data)
+            } catch{
+                print("Erro")
+            }
+        }
+        
     }
 }
 
